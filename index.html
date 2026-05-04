@@ -1436,17 +1436,39 @@ footer {
         </div>
       </div>
       <div class="contact-form-side">
-        <p class="contact-form-title">// send_message</p>
-        <div class="form-row">
-          <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
-          <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
-        </div>
-        <div class="form-group"><label>Subject</label><input type="text" placeholder="What's this about?"></div>
-        <div class="form-group"><label>Message</label><textarea placeholder="Tell me what you're working on..."></textarea></div>
-        <button class="btn-send" onclick="alert('Form submission requires a backend — connect this to Formspree or similar!')">Transmit →</button>
+  <p class="contact-form-title">// send_message</p>
+
+  <form action="https://formspree.io/f/xeenager" method="POST">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Your name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
       </div>
     </div>
-  </div>
+
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text" name="subject" placeholder="What's this about?" required>
+    </div>
+
+    <div class="form-group">
+      <label>Message</label>
+      <textarea name="message" placeholder="Tell me what you're working on..." required></textarea>
+    </div>
+
+    <!-- spam protection -->
+    <input type="text" name="_gotcha" style="display:none">
+
+    <button class="btn-send" type="submit">Send →</button>
+
+  </form>
+</div>
 </section>
 
 <footer>Matteo Lai · Engineering Portfolio · v3.0</footer>
