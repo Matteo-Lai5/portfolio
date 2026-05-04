@@ -1466,13 +1466,18 @@ footer {
     <input type="text" name="_gotcha" style="display:none">
 
     <button class="btn-send" type="submit">Send →</button>
+    <p id="form-status" class="form-status"></p>
 
   </form>
-        <script>
+<script>
   const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
 
   form.addEventListener("submit", async function(e) {
     e.preventDefault();
+
+    status.textContent = "Sending...";
+    status.style.color = "#888";
 
     const data = new FormData(form);
 
@@ -1485,17 +1490,19 @@ footer {
     });
 
     if (response.ok) {
-      alert("Message sent ✓");
+      status.textContent = "✓ Message sent";
+      status.style.color = "#00ffcc";
       form.reset();
     } else {
-      alert("Something went wrong.");
+      status.textContent = "✕ Failed to send";
+      status.style.color = "#ff4d4d";
     }
   });
 </script>
 </div>
 </section>
 
-<footer>Matteo Lai · Engineering Portfolio · v3.3</footer>
+<footer>Matteo Lai · Engineering Portfolio · v3.4</footer>
 
 <!-- Admin -->
 <button id="lock-btn" onclick="toggleAdmin()">
