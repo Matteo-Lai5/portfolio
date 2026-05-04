@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
+<title>Matteo — Engineering Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,9 +23,13 @@
   --text-muted: #4a6a88;
   --text-bright:#e8f4ff;
   --red:        #ff4455;
+  --amber:      #ffaa00;
   --card-w:     320px;
   --card-h:     420px;
+  --nav-h:      56px;
 }
+
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Space Grotesk', sans-serif;
@@ -35,6 +39,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Grid background */
 body::before {
   content: '';
   position: fixed;
@@ -43,130 +48,417 @@ body::before {
     linear-gradient(var(--border) 1px, transparent 1px),
     linear-gradient(90deg, var(--border) 1px, transparent 1px);
   background-size: 40px 40px;
-  opacity: 0.35;
+  opacity: 0.3;
   pointer-events: none;
   z-index: 0;
 }
 
-body::after {
-  content: '';
+/* ─────────────────────────────────────────
+   NAV
+───────────────────────────────────────── */
+nav {
   position: fixed;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse, #00aaff18 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-header {
-  position: relative;
-  z-index: 1;
-  padding: 5rem 2rem 3.5rem;
-  text-align: center;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: rgba(11, 15, 20, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-}
-
-.sys-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0 2.5rem;
 }
 
-.sys-label::before, .sys-label::after {
-  content: '';
-  display: inline-block;
-  width: 40px;
-  height: 1px;
-  background: var(--accent);
-  opacity: 0.5;
-}
-
-h1 {
+.nav-logo {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-bright);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 1.25rem;
-}
-
-h1 span { color: var(--accent); }
-
-.tagline {
-  font-size: 0.85rem;
-  color: var(--text-muted);
   letter-spacing: 0.05em;
-  font-family: 'Space Mono', monospace;
+  text-decoration: none;
 }
 
-#lock-btn {
-  position: fixed;
-  bottom: 1rem;
-  right: 1.25rem;
-  z-index: 200;
-  background: transparent;
-  border: none;
-  color: var(--border2);
-  font-family: 'Space Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.5rem;
-  border-radius: 2px;
-  cursor: pointer;
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: all 0.2s;
-  opacity: 0.4;
+  gap: 0.25rem;
+  list-style: none;
 }
 
-#lock-btn:hover { color: var(--text-muted); opacity: 1; }
-#lock-btn.admin { color: var(--green); opacity: 0.8; }
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 2px;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+}
 
-.section-label {
+.nav-links a:hover { color: var(--text-bright); background: var(--bg3); }
+.nav-links a.active { color: var(--accent); }
+
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 20px; height: 1px;
+  background: var(--accent);
+}
+
+/* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+#hero {
   position: relative;
   z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-h) + 2rem) 2rem 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Hero glow */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 500px;
+  background: radial-gradient(ellipse, #00aaff14 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid var(--green-dim);
+  background: rgba(0,229,160,0.06);
+  padding: 0.35rem 0.85rem;
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero-name {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+}
+
+.hero-name .accent { color: var(--accent); }
+
+.hero-title {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.hero-title span {
+  color: var(--text);
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1px;
+}
+
+.hero-desc {
+  max-width: 540px;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 3rem;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-cta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: 2px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-cta-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn-cta-primary:hover { opacity: 0.85; }
+
+.btn-cta-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+}
+
+.btn-cta-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  animation: bounce 2.5s ease infinite;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--text-muted), transparent);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* Hero stats bar */
+.hero-stats {
+  display: flex;
+  gap: 0px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.hero-stat {
+  padding: 0.85rem 2rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.hero-stat:last-child { border-right: none; }
+
+.stat-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+}
+
+.stat-lbl {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ─────────────────────────────────────────
+   SECTION COMMONS
+───────────────────────────────────────── */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 5rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.section-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+.section-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  max-width: 1160px;
-  margin: 3rem auto 0;
-  padding: 0 3rem;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  margin-bottom: 3rem;
 }
 
-.section-label::after {
-  content: '';
+.section-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.section-line {
   flex: 1;
   height: 1px;
   background: var(--border);
 }
 
-.grid {
+/* ─────────────────────────────────────────
+   ABOUT
+───────────────────────────────────────── */
+#about .about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-avatar {
+  aspect-ratio: 1;
+  max-width: 320px;
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+}
+
+.about-avatar::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px;
+  width: 16px; height: 16px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.about-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; right: 8px;
+  width: 16px; height: 16px;
+  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+}
+
+.avatar-placeholder {
+  font-size: 5rem;
+  opacity: 0.3;
+}
+
+.avatar-label {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.about-content { padding-top: 0.5rem; }
+
+.about-content p {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--text);
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+}
+
+.about-content p:last-of-type { margin-bottom: 2rem; }
+
+.about-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.detail-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-bright);
+}
+
+/* ─────────────────────────────────────────
+   PROJECTS (shared grid)
+───────────────────────────────────────── */
+.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-w), 1fr));
   gap: 1.5rem;
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 1.5rem 3rem 6rem;
 }
 
 .flip-card {
@@ -216,10 +508,8 @@ h1 span { color: var(--accent); }
 }
 
 .card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
   transition: transform 0.5s ease;
   filter: brightness(0.85) saturate(0.8);
 }
@@ -227,12 +517,9 @@ h1 span { color: var(--accent); }
 .flip-card:hover .card-img img { transform: scale(1.04); }
 
 .card-img-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
   gap: 0.75rem;
   font-family: 'Space Mono', monospace;
   position: relative;
@@ -278,6 +565,8 @@ h1 span { color: var(--accent); }
   padding: 3px 8px;
   border-radius: 2px;
 }
+
+.card-tag.personal { color: var(--amber); background: rgba(255,170,0,0.08); border-color: rgba(255,170,0,0.3); }
 
 .flip-hint {
   font-size: 0.55rem;
@@ -385,8 +674,7 @@ h1 span { color: var(--accent); }
 
 .delete-btn {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  top: 0.6rem; right: 0.6rem;
   z-index: 10;
   background: var(--bg);
   border: 1px solid var(--red);
@@ -423,20 +711,13 @@ body.admin-mode .flip-card:hover .delete-btn { opacity: 1; }
 
 body.admin-mode .add-card { display: flex; }
 
-.add-card:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-glow);
-}
+.add-card:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
 
 .add-icon {
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border: 1px solid currentColor;
   border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 1.25rem;
   transition: transform 0.25s;
 }
@@ -444,6 +725,186 @@ body.admin-mode .add-card { display: flex; }
 .add-card:hover .add-icon { transform: rotate(90deg); }
 .add-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
 
+/* ─────────────────────────────────────────
+   SKILLS
+───────────────────────────────────────── */
+#skills .skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.skill-group {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.25rem;
+  transition: border-color 0.2s;
+}
+
+.skill-group:hover { border-color: var(--border2); }
+
+.skill-group-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 0.85rem;
+}
+
+.skill-item:last-child { margin-bottom: 0; }
+
+.skill-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+}
+
+.skill-name span { color: var(--text-muted); }
+
+.skill-bar {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 1s ease;
+}
+
+/* ─────────────────────────────────────────
+   CONTACT
+───────────────────────────────────────── */
+#contact .contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.contact-intro {
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-decoration: none;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+
+.contact-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.contact-link-icon { font-size: 1rem; opacity: 0.7; }
+
+.contact-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  display: block;
+  font-family: 'Space Mono', monospace;
+}
+
+.contact-form-side { }
+
+.contact-form-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+.form-group { margin-bottom: 0.75rem; }
+
+.form-group label {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  background: var(--bg);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-bright);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+
+.form-group textarea { height: 100px; resize: none; }
+
+.btn-send {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  transition: opacity 0.2s;
+}
+
+.btn-send:hover { opacity: 0.85; }
+
+/* ─────────────────────────────────────────
+   MODALS
+───────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -501,35 +962,6 @@ body.admin-mode .add-card { display: flex; }
   margin-bottom: 1.5rem;
 }
 
-.form-group { margin-bottom: 1rem; }
-
-.form-group label {
-  display: block;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid var(--border2);
-  border-radius: 2px;
-  background: var(--bg);
-  font-family: 'Space Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--text-bright);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus { border-color: var(--accent); }
-
 .form-error {
   font-family: 'Space Mono', monospace;
   font-size: 0.65rem;
@@ -540,224 +972,495 @@ body.admin-mode .add-card { display: flex; }
 
 .form-error.visible { display: block; }
 
-.modal-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
+.modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
 
 .btn-primary {
-  flex: 1;
-  padding: 0.65rem;
-  background: var(--accent);
-  color: var(--bg);
-  border: none;
-  border-radius: 2px;
+  flex: 1; padding: 0.65rem;
+  background: var(--accent); color: var(--bg);
+  border: none; border-radius: 2px;
   font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: opacity 0.2s;
 }
 
 .btn-primary:hover { opacity: 0.85; }
 
 .btn-ghost {
   padding: 0.65rem 1.25rem;
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border2);
-  border-radius: 2px;
+  background: transparent; color: var(--text-muted);
+  border: 1px solid var(--border2); border-radius: 2px;
   font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
 }
 
 .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
 
+/* ─────────────────────────────────────────
+   ADMIN
+───────────────────────────────────────── */
+#lock-btn {
+  position: fixed;
+  bottom: 1rem; right: 1.25rem;
+  z-index: 200;
+  background: transparent; border: none;
+  color: var(--border2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 0.5rem; border-radius: 2px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: all 0.2s; opacity: 0.4;
+}
+
+#lock-btn:hover { color: var(--text-muted); opacity: 1; }
+#lock-btn.admin { color: var(--green); opacity: 0.8; }
+
 #admin-banner {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   z-index: 150;
   background: var(--green-dim);
   border-top: 1px solid var(--green);
   padding: 0.5rem 2rem;
   display: none;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   gap: 1rem;
   font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--green);
 }
 
 body.admin-mode #admin-banner { display: flex; }
 
+/* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
 footer {
-  position: relative;
-  z-index: 1;
+  position: relative; z-index: 1;
   text-align: center;
-  padding: 1.5rem 2rem 4rem;
+  padding: 2rem 2rem 4rem;
   border-top: 1px solid var(--border);
   font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--text-muted);
 }
 
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .flip-card, .add-card { animation: fadeUp 0.5s ease both; }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  #about .about-grid { grid-template-columns: 1fr; }
+  #contact .contact-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; }
+  .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .section-inner { padding: 0 1.5rem; }
+  .grid { padding: 0; }
+}
 </style>
 </head>
 <body>
 
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">M<span>.</span>LAI</a>
+  <ul class="nav-links">
+    <li><a href="#about">About Matteo</a></li>
+    <li><a href="#key-projects">Key Projects</a></li>
+    <li><a href="#personal-projects">Personal Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-status">
+    <span class="status-dot"></span>
+    Available for new opportunities
+  </div>
+
+  <h1 class="hero-name">
+    MATTEO<br><span class="accent">LAI</span>
+  </h1>
+
+  <p class="hero-title">
+    <span>Mechanical Engineer</span> &nbsp;·&nbsp; <span>Materials Engineer</span> &nbsp;·&nbsp; <span>Problem Solver</span>
+  </p>
+
+  <p class="hero-desc">
+    Mechanical engineering student majoring in materials engineering and their role in real world performance and design. Experienced as a building services consultant engineer, with a growing focus on motorsport engineering.
+    I approach problems analytically, combining theory with practical thinking to design efficient, real-world solutions. Passionate about performance, precision, and continuous improvement.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="stat-val">3+</span>
+      <span class="stat-lbl">Years Exp.</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-val">12</span>
+      <span class="stat-lbl">Projects</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-val">6</span>
+      <span class="stat-lbl">Tech Stacks</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-val">∞</span>
+      <span class="stat-lbl">Curiosity</span>
+    </div>
+  </div>
+
+  <div class="hero-ctas">
+    <a href="#key-projects" class="btn-cta btn-cta-primary">View Projects</a>
+    <a href="#contact" class="btn-cta btn-cta-ghost">Get in Touch</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">01 //</span>
+      <h2 class="section-title">About Matteo</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-avatar">
+        <span class="avatar-placeholder">👤</span>
+        <span class="avatar-label">// profile_img</span>
+      </div>
+      <div class="about-content">
+        <p>
+          I’m Matteo, a mechanical engineering student with a focus on materials engineering and a growing interest in how design decisions play out in the real world. I enjoy building solutions that are not just technically sound, but practical, efficient, and considered.
+        </p>
+        <p>
+          My experience includes working as a building services consultant engineer, where I’ve applied engineering fundamentals to real systems in the built environment. I’m particularly interested in how materials, constraints, and performance come together — and where small decisions have large impacts.
+        </p>
+        <p>
+          Outside of engineering, I’m drawn to anything with a well-resolved mechanism- motorsport, mechanical watches, and getting hands-on working on motorbikes and cars. I’m especially interested in how things behave at their limits, and why.
+        </p>
+        <div class="about-details">
+          <div class="detail-item">
+            <span class="detail-label">Location</span>
+            <span class="detail-val">Brisbane, QLD</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Degree</span>
+            <span class="detail-val">Mechanical Engineering</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Focus</span>
+            <span class="detail-val">Materials / Applied Engineering</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Status</span>
+            <span class="detail-val" style="color:var(--green)">Open to work</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KEY PROJECTS ── -->
+<section id="key-projects" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">02 //</span>
+      <h2 class="section-title">Key Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid" id="grid-key">
+
+      <div class="flip-card" onclick="handleCardClick(event, this)">
+        <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="card-img">
+              <div class="card-img-placeholder" style="background:linear-gradient(135deg,#0d1f33,#0a1a2a)">
+                <span class="placeholder-icon">🌐</span>
+                <span class="placeholder-id">proj_001</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div><div class="card-title">Project One</div></div>
+              <div class="card-meta"><span class="card-tag">Web</span><span class="flip-hint">hover →</span></div>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <div class="back-sys">// key_learnings</div>
+              <div class="back-title">Project One</div>
+              <ul class="learnings-list">
+                <li>Replace with your first key learning — what surprised you most?</li>
+                <li>A technical challenge you overcame and how you'd approach it differently now.</li>
+                <li>Something you'd do differently if starting this over today.</li>
+              </ul>
+            </div>
+            <div class="back-footer"><div class="back-tags"><span class="tech-tag">React</span><span class="tech-tag">Node</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:.08s">
+        <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="card-img">
+              <div class="card-img-placeholder" style="background:linear-gradient(135deg,#0d2200,#091a00)">
+                <span class="placeholder-icon">⚙️</span>
+                <span class="placeholder-id">proj_002</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div><div class="card-title">Project Two</div></div>
+              <div class="card-meta"><span class="card-tag">Systems</span><span class="flip-hint">hover →</span></div>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <div class="back-sys">// key_learnings</div>
+              <div class="back-title">Project Two</div>
+              <ul class="learnings-list">
+                <li>The most important design decision and its downstream impact on the system.</li>
+                <li>How constraints shaped the architecture in ways you didn't anticipate.</li>
+                <li>A lesson about scope management you'll carry forward.</li>
+              </ul>
+            </div>
+            <div class="back-footer"><div class="back-tags"><span class="tech-tag">C++</span><span class="tech-tag">Linux</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:.16s">
+        <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="card-img">
+              <div class="card-img-placeholder" style="background:linear-gradient(135deg,#1a0d33,#110922)">
+                <span class="placeholder-icon">📊</span>
+                <span class="placeholder-id">proj_003</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div><div class="card-title">Project Three</div></div>
+              <div class="card-meta"><span class="card-tag">Data</span><span class="flip-hint">hover →</span></div>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <div class="back-sys">// key_learnings</div>
+              <div class="back-title">Project Three</div>
+              <ul class="learnings-list">
+                <li>Unexpected complexity hiding behind what looked like a simple problem.</li>
+                <li>Why the first approach failed and what the pivot revealed.</li>
+                <li>A collaboration insight that changed how you work on technical projects.</li>
+              </ul>
+            </div>
+            <div class="back-footer"><div class="back-tags"><span class="tech-tag">Python</span><span class="tech-tag">SQL</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-card" onclick="openAddModal('key')">
+        <div class="add-icon">+</div>
+        <span class="add-label">New Project</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PERSONAL PROJECTS ── -->
+<section id="personal-projects" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">03 //</span>
+      <h2 class="section-title">Personal Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid" id="grid-personal">
+
+      <div class="flip-card" onclick="handleCardClick(event, this)">
+        <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="card-img">
+              <div class="card-img-placeholder" style="background:linear-gradient(135deg,#1a1400,#110e00)">
+                <span class="placeholder-icon">🛠️</span>
+                <span class="placeholder-id">pers_001</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div><div class="card-title">Side Project One</div></div>
+              <div class="card-meta"><span class="card-tag personal">Personal</span><span class="flip-hint">hover →</span></div>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <div class="back-sys">// key_learnings</div>
+              <div class="back-title">Side Project One</div>
+              <ul class="learnings-list">
+                <li>What made you start this project and what kept you going when it got hard.</li>
+                <li>The most unexpected technical rabbit hole you fell into.</li>
+                <li>What you'd share with someone starting a similar project from scratch.</li>
+              </ul>
+            </div>
+            <div class="back-footer"><div class="back-tags"><span class="tech-tag">Rust</span><span class="tech-tag">WASM</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:.08s">
+        <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="card-img">
+              <div class="card-img-placeholder" style="background:linear-gradient(135deg,#001a1a,#001010)">
+                <span class="placeholder-icon">🤖</span>
+                <span class="placeholder-id">pers_002</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div><div class="card-title">Side Project Two</div></div>
+              <div class="card-meta"><span class="card-tag personal">Personal</span><span class="flip-hint">hover →</span></div>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <div class="back-sys">// key_learnings</div>
+              <div class="back-title">Side Project Two</div>
+              <ul class="learnings-list">
+                <li>The thing that made this project genuinely fun to build, not just useful.</li>
+                <li>A design decision you're still proud of, and why.</li>
+                <li>How this project shifted your thinking about a broader concept in engineering.</li>
+              </ul>
+            </div>
+            <div class="back-footer"><div class="back-tags"><span class="tech-tag">Python</span><span class="tech-tag">ML</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-card" onclick="openAddModal('personal')">
+        <div class="add-icon">+</div>
+        <span class="add-label">New Project</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">04 //</span>
+      <h2 class="section-title">Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">ENGINEERING FUNDAMENTALS</div>
+        <div class="skill-item"><div class="skill-name">Mechanics of Materials <span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Structural Analysis <span>75%</span></div><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Heat Transfer <span>80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Fluid Mechanics <span>85%</span></div><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">MATERIALS ENGINEERING</div>
+        <div class="skill-item"><div class="skill-name">Material Selection & Trade-offs <span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Stress–Strain Behaviour <span>75%</span></div><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Metals, Polymers & Composites <span>80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Heat Treatment & Processing <span>65%</span></div><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">BUILDING SERVICES (CONSULTING)</div>
+        <div class="skill-item"><div class="skill-name">HVAC Systems Understanding <span>85%</span></div><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">System Design Coordination <span>80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Technical Documentation & Drawings <span>70%</span></div><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+        <div class="skill-item"><div class="skill-name">Heatload Calculations <span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">05 //</span>
+      <h2 class="section-title">Contact</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro">
+          Whether you're looking to collaborate on something interesting, have a role that might be a fit, or just want to talk engineering — I'm always happy to hear from you.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:matteo@example.com" class="contact-link">
+            <span class="contact-link-icon">✉</span>
+            <div>
+              <span class="contact-label">Email</span>
+              matteojayl@outlook.com
+            </div>
+          </a>
+          <a href="https://github.com" target="_blank" class="contact-link">
+            <span class="contact-link-icon">⌥</span>
+            <div>
+              <span class="contact-label">GitHub</span>
+              github.com/Matteo-Lai5/
+            </div>
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="contact-link">
+            <span class="contact-link-icon">◈</span>
+            <div>
+              <span class="contact-label">LinkedIn</span>
+              linkedin.com/in/matteo-lai-19b140262/
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form-side">
+        <p class="contact-form-title">// send_message</p>
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+        </div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="What's this about?"></div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Tell me what you're working on..."></textarea></div>
+        <button class="btn-send" onclick="alert('Form submission requires a backend — connect this to Formspree or similar!')">Transmit →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Matteo Lai · Engineering Portfolio · v3.0</footer>
+
+<!-- Admin -->
 <button id="lock-btn" onclick="toggleAdmin()">
   <span id="lock-icon">⚿</span>
   <span id="lock-label">Admin</span>
 </button>
 
-<header>
-  <div class="sys-label">Engineering Portfolio</div>
-  <h1>My <span>Projects</span></h1>
-  <p class="tagline">// hover any card to read key learnings</p>
-</header>
-
-<div class="section-label">Project Index</div>
-
-<div class="grid" id="grid">
-
-  <div class="flip-card" onclick="handleCardClick(event, this)">
-    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
-    <div class="flip-card-inner">
-      <div class="flip-card-front">
-        <div class="card-img">
-          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #0d1f33 0%, #0a1a2a 100%);">
-            <span class="placeholder-icon">🌐</span>
-            <span class="placeholder-id">proj_001</span>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-title">Project One</div></div>
-          <div class="card-meta">
-            <span class="card-tag">Web</span>
-            <span class="flip-hint">hover →</span>
-          </div>
-        </div>
-      </div>
-      <div class="flip-card-back">
-        <div>
-          <div class="back-sys">// key_learnings</div>
-          <div class="back-title">Project One</div>
-          <ul class="learnings-list">
-            <li>Replace with your first key learning — what surprised you most about this project?</li>
-            <li>A technical challenge you overcame and how you'd approach it differently now.</li>
-            <li>Something you'd do differently if you were starting this over today.</li>
-          </ul>
-        </div>
-        <div class="back-footer">
-          <div class="back-tags"><span class="tech-tag">React</span><span class="tech-tag">Node</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:0.08s">
-    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
-    <div class="flip-card-inner">
-      <div class="flip-card-front">
-        <div class="card-img">
-          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #0d2200 0%, #091a00 100%);">
-            <span class="placeholder-icon">⚙️</span>
-            <span class="placeholder-id">proj_002</span>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-title">Project Two</div></div>
-          <div class="card-meta">
-            <span class="card-tag">Systems</span>
-            <span class="flip-hint">hover →</span>
-          </div>
-        </div>
-      </div>
-      <div class="flip-card-back">
-        <div>
-          <div class="back-sys">// key_learnings</div>
-          <div class="back-title">Project Two</div>
-          <ul class="learnings-list">
-            <li>The most important design decision made during this project and its downstream impact.</li>
-            <li>How user feedback or testing reshaped the direction mid-way through.</li>
-            <li>A lesson about scope management you'll carry to every future project.</li>
-          </ul>
-        </div>
-        <div class="back-footer">
-          <div class="back-tags"><span class="tech-tag">C++</span><span class="tech-tag">Linux</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:0.16s">
-    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
-    <div class="flip-card-inner">
-      <div class="flip-card-front">
-        <div class="card-img">
-          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #1a0d33 0%, #110922 100%);">
-            <span class="placeholder-icon">📊</span>
-            <span class="placeholder-id">proj_003</span>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-title">Project Three</div></div>
-          <div class="card-meta">
-            <span class="card-tag">Data</span>
-            <span class="flip-hint">hover →</span>
-          </div>
-        </div>
-      </div>
-      <div class="flip-card-back">
-        <div>
-          <div class="back-sys">// key_learnings</div>
-          <div class="back-title">Project Three</div>
-          <ul class="learnings-list">
-            <li>The unexpected complexity hiding behind what appeared to be a simple problem statement.</li>
-            <li>Why the first approach failed and what the pivot taught you about problem solving.</li>
-            <li>A collaboration insight that changed how you work with others on technical projects.</li>
-          </ul>
-        </div>
-        <div class="back-footer">
-          <div class="back-tags"><span class="tech-tag">Python</span><span class="tech-tag">SQL</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="add-card" onclick="openAddModal()">
-    <div class="add-icon">+</div>
-    <span class="add-label">New Project</span>
-  </div>
-
-</div>
-
 <div id="admin-banner">
-  ◆ Admin mode active — you can add or remove projects
+  ◆ Admin mode active — add or remove projects
   <button class="btn-ghost" style="padding:0.3rem 0.75rem;font-size:0.55rem;" onclick="logout()">Exit</button>
 </div>
-
-<footer>Portfolio · v2.0 · Engineered with precision</footer>
 
 <!-- Auth Modal -->
 <div class="modal-overlay" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
@@ -779,36 +1482,15 @@ footer {
 <!-- Add Project Modal -->
 <div class="modal-overlay" id="add-modal" onclick="if(event.target===this)closeAddModal()">
   <div class="modal">
-    <div class="modal-sys">// proj.create</div>
+    <div class="modal-sys" id="add-modal-sys">// proj.create</div>
     <h2>New Project</h2>
-    <div class="form-group">
-      <label>Project Title</label>
-      <input type="text" id="f-title" placeholder="e.g. Distributed Logger">
-    </div>
-    <div class="form-group">
-      <label>Category Tag</label>
-      <input type="text" id="f-tag" placeholder="e.g. Systems, Data, ML">
-    </div>
-    <div class="form-group">
-      <label>Learning 01</label>
-      <input type="text" id="f-l1" placeholder="Key insight or lesson...">
-    </div>
-    <div class="form-group">
-      <label>Learning 02</label>
-      <input type="text" id="f-l2" placeholder="Key insight or lesson...">
-    </div>
-    <div class="form-group">
-      <label>Learning 03</label>
-      <input type="text" id="f-l3" placeholder="Key insight or lesson...">
-    </div>
-    <div class="form-group">
-      <label>Tech Stack (comma-separated)</label>
-      <input type="text" id="f-stack" placeholder="e.g. Rust, Kafka, PostgreSQL">
-    </div>
-    <div class="form-group">
-      <label>Image URL (optional)</label>
-      <input type="text" id="f-img" placeholder="https://...">
-    </div>
+    <div class="form-group"><label>Project Title</label><input type="text" id="f-title" placeholder="e.g. Distributed Logger"></div>
+    <div class="form-group"><label>Category Tag</label><input type="text" id="f-tag" placeholder="e.g. Systems, Data, ML"></div>
+    <div class="form-group"><label>Learning 01</label><input type="text" id="f-l1" placeholder="Key insight or lesson..."></div>
+    <div class="form-group"><label>Learning 02</label><input type="text" id="f-l2" placeholder="Key insight or lesson..."></div>
+    <div class="form-group"><label>Learning 03</label><input type="text" id="f-l3" placeholder="Key insight or lesson..."></div>
+    <div class="form-group"><label>Tech Stack (comma-separated)</label><input type="text" id="f-stack" placeholder="e.g. Rust, Kafka, PostgreSQL"></div>
+    <div class="form-group"><label>Image URL (optional)</label><input type="text" id="f-img" placeholder="https://..."></div>
     <div class="modal-actions">
       <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
       <button class="btn-primary" onclick="addProject()">Deploy</button>
@@ -817,27 +1499,47 @@ footer {
 </div>
 
 <script>
-// SHA-256 hash of "Potato64" — generated via Web Crypto, password is never stored in plaintext
-const PASS_HASH = '9d2c4c1c6d30cf6f6e37e06e39c3b4b3e2a1f0d8c7b6a5948372615040302010';
-
 async function sha256(msg) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
+sha256('Potato64').then(h => { window._correctHash = h; });
+
 let isAdmin = false;
-let projectCount = 3;
+let keyCnt = 3, persCnt = 2;
+let currentGridTarget = 'key';
 
 const palettes = [
-  'linear-gradient(135deg,#0d1f33 0%,#0a1a2a 100%)',
-  'linear-gradient(135deg,#0d2200 0%,#091a00 100%)',
-  'linear-gradient(135deg,#1a0d33 0%,#110922 100%)',
-  'linear-gradient(135deg,#2a1400 0%,#1a0d00 100%)',
-  'linear-gradient(135deg,#002222 0%,#001515 100%)',
-  'linear-gradient(135deg,#1a0022 0%,#110016 100%)',
+  'linear-gradient(135deg,#0d1f33,#0a1a2a)',
+  'linear-gradient(135deg,#0d2200,#091a00)',
+  'linear-gradient(135deg,#1a0d33,#110922)',
+  'linear-gradient(135deg,#2a1400,#1a0d00)',
+  'linear-gradient(135deg,#002222,#001515)',
+  'linear-gradient(135deg,#1a1400,#110e00)',
 ];
-const emojis = ['🔬','⚙️','📡','🛰️','🧬','🔭','⚗️','🖥️','📐','🔩'];
+const emojis = ['🔬','⚙️','📡','🛰️','🧬','🔭','⚗️','🖥️','📐','🔩','🛠️','🤖'];
 
+// ── NAV ACTIVE STATE ──
+const sections = ['hero','about','key-projects','personal-projects','skills','contact'];
+const navLinks = document.querySelectorAll('.nav-links a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// ── ADMIN ──
 function toggleAdmin() {
   if (isAdmin) { logout(); return; }
   document.getElementById('auth-modal').classList.add('active');
@@ -853,9 +1555,6 @@ function closeAuthModal() {
 async function submitAuth() {
   const pw = document.getElementById('auth-pw').value;
   const hash = await sha256(pw);
-
-  // Compare against actual hash of "Potato64"
-  // (The PASS_HASH placeholder above is overwritten at runtime by this self-check on first load)
   if (hash === window._correctHash) {
     isAdmin = true;
     document.body.classList.add('admin-mode');
@@ -869,9 +1568,6 @@ async function submitAuth() {
   }
 }
 
-// Compute and store the correct hash at load time
-sha256('Potato64').then(h => { window._correctHash = h; });
-
 function logout() {
   isAdmin = false;
   document.body.classList.remove('admin-mode');
@@ -879,6 +1575,7 @@ function logout() {
   document.getElementById('lock-label').textContent = 'Admin';
 }
 
+// ── CARDS ──
 function handleCardClick(e, card) {
   if (e.target.closest('.delete-btn')) return;
   card.classList.toggle('flipped');
@@ -894,8 +1591,11 @@ function deleteCard(e, btn) {
   setTimeout(() => card.remove(), 300);
 }
 
-function openAddModal() {
+// ── ADD ──
+function openAddModal(target) {
   if (!isAdmin) return;
+  currentGridTarget = target;
+  document.getElementById('add-modal-sys').textContent = target === 'personal' ? '// pers.create' : '// proj.create';
   document.getElementById('add-modal').classList.add('active');
   setTimeout(() => document.getElementById('f-title').focus(), 100);
 }
@@ -917,16 +1617,22 @@ function addProject() {
   const stack  = document.getElementById('f-stack').value.trim();
   const imgUrl = document.getElementById('f-img').value.trim();
 
-  const palette = palettes[projectCount % palettes.length];
-  const emoji   = emojis[projectCount % emojis.length];
-  const id      = String(projectCount + 1).padStart(3, '0');
-  const tags    = stack
+  const isPersonal = currentGridTarget === 'personal';
+  const cnt = isPersonal ? persCnt : keyCnt;
+  const prefix = isPersonal ? 'pers' : 'proj';
+
+  const palette = palettes[cnt % palettes.length];
+  const emoji   = emojis[cnt % emojis.length];
+  const id      = String(cnt + 1).padStart(3,'0');
+
+  const tagClass = isPersonal ? 'card-tag personal' : 'card-tag';
+  const tags = stack
     ? stack.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('')
     : '<span class="tech-tag">—</span>';
 
   const imgHtml = imgUrl
     ? `<img src="${imgUrl}" alt="${title}" onerror="this.style.display='none'">`
-    : `<div class="card-img-placeholder" style="background:${palette}"><span class="placeholder-icon">${emoji}</span><span class="placeholder-id">proj_${id}</span></div>`;
+    : `<div class="card-img-placeholder" style="background:${palette}"><span class="placeholder-icon">${emoji}</span><span class="placeholder-id">${prefix}_${id}</span></div>`;
 
   const card = document.createElement('div');
   card.className = 'flip-card';
@@ -938,30 +1644,25 @@ function addProject() {
         <div class="card-img">${imgHtml}</div>
         <div class="card-footer">
           <div><div class="card-title">${title}</div></div>
-          <div class="card-meta">
-            <span class="card-tag">${tag}</span>
-            <span class="flip-hint">hover →</span>
-          </div>
+          <div class="card-meta"><span class="${tagClass}">${tag}</span><span class="flip-hint">hover →</span></div>
         </div>
       </div>
       <div class="flip-card-back">
         <div>
           <div class="back-sys">// key_learnings</div>
           <div class="back-title">${title}</div>
-          <ul class="learnings-list">
-            <li>${l1}</li><li>${l2}</li><li>${l3}</li>
-          </ul>
+          <ul class="learnings-list"><li>${l1}</li><li>${l2}</li><li>${l3}</li></ul>
         </div>
-        <div class="back-footer">
-          <div class="back-tags">${tags}</div>
-        </div>
+        <div class="back-footer"><div class="back-tags">${tags}</div></div>
       </div>
     </div>`;
 
-  const grid   = document.getElementById('grid');
+  const gridId = isPersonal ? 'grid-personal' : 'grid-key';
+  const grid = document.getElementById(gridId);
   const addBtn = grid.querySelector('.add-card');
   grid.insertBefore(card, addBtn);
-  projectCount++;
+
+  if (isPersonal) persCnt++; else keyCnt++;
   closeAddModal();
 }
 </script>
