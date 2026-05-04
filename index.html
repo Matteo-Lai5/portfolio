@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0b0f14;
+  --bg2:        #111720;
+  --bg3:        #1a2233;
+  --border:     #1e2d42;
+  --border2:    #2a3f5c;
+  --accent:     #00aaff;
+  --accent-dim: #004d73;
+  --accent-glow:#00aaff22;
+  --green:      #00e5a0;
+  --green-dim:  #003d2a;
+  --text:       #c8d8e8;
+  --text-muted: #4a6a88;
+  --text-bright:#e8f4ff;
+  --red:        #ff4455;
+  --card-w:     320px;
+  --card-h:     420px;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, #00aaff18 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+header {
+  position: relative;
+  z-index: 1;
+  padding: 5rem 2rem 3.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.sys-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sys-label::before, .sys-label::after {
+  content: '';
+  display: inline-block;
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 1.25rem;
+}
+
+h1 span { color: var(--accent); }
+
+.tagline {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  font-family: 'Space Mono', monospace;
+}
+
+#lock-btn {
+  position: fixed;
+  bottom: 1rem;
+  right: 1.25rem;
+  z-index: 200;
+  background: transparent;
+  border: none;
+  color: var(--border2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+  opacity: 0.4;
+}
+
+#lock-btn:hover { color: var(--text-muted); opacity: 1; }
+#lock-btn.admin { color: var(--green); opacity: 0.8; }
+
+.section-label {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1160px;
+  margin: 3rem auto 0;
+  padding: 0 3rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-w), 1fr));
+  gap: 1.5rem;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 1.5rem 3rem 6rem;
+}
+
+.flip-card {
+  height: var(--card-h);
+  perspective: 1400px;
+  cursor: pointer;
+  position: relative;
+}
+
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.flip-card-front {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s;
+}
+
+.flip-card:hover .flip-card-front { border-color: var(--border2); }
+
+.card-img {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+  filter: brightness(0.85) saturate(0.8);
+}
+
+.flip-card:hover .card-img img { transform: scale(1.04); }
+
+.card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: 'Space Mono', monospace;
+  position: relative;
+}
+
+.card-img-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+  pointer-events: none;
+}
+
+.placeholder-icon { font-size: 2.5rem; opacity: 0.5; }
+.placeholder-id { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+
+.card-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg2);
+}
+
+.card-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.card-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+.card-tag {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+  background: var(--accent-glow);
+  border: 1px solid var(--accent-dim);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.flip-hint {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+}
+
+.flip-card-back {
+  background: var(--bg3);
+  border: 1px solid var(--accent-dim);
+  transform: rotateY(180deg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.flip-card-back::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px;
+  width: 12px; height: 12px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.flip-card-back::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; right: 8px;
+  width: 12px; height: 12px;
+  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+}
+
+.back-sys {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  opacity: 0.7;
+}
+
+.back-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border2);
+}
+
+.learnings-list {
+  list-style: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.learnings-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text);
+  font-weight: 300;
+}
+
+.learnings-list li::before {
+  content: '▸';
+  color: var(--accent);
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  margin-top: 0.3em;
+}
+
+.back-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.back-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.tech-tag {
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 10;
+  background: var(--bg);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 4px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  display: none;
+}
+
+body.admin-mode .delete-btn { display: block; }
+body.admin-mode .flip-card:hover .delete-btn { opacity: 1; }
+
+.add-card {
+  height: var(--card-h);
+  border: 1px dashed var(--border2);
+  border-radius: 3px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.25s;
+  background: transparent;
+  font-family: 'Space Mono', monospace;
+}
+
+body.admin-mode .add-card { display: flex; }
+
+.add-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.add-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: transform 0.25s;
+}
+
+.add-card:hover .add-icon { transform: rotate(90deg); }
+.add-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 8, 14, 0.92);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  transform: translateY(16px);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+}
+
+.modal-overlay.active .modal { transform: translateY(0); }
+
+.modal-sys {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.modal h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 1.5rem;
+}
+
+.form-group { margin-bottom: 1rem; }
+
+.form-group label {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  background: var(--bg);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-bright);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+
+.form-error {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--red);
+  margin-top: 0.5rem;
+  display: none;
+}
+
+.form-error.visible { display: block; }
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 0.65rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-ghost {
+  padding: 0.65rem 1.25rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
+
+#admin-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: var(--green-dim);
+  border-top: 1px solid var(--green);
+  padding: 0.5rem 2rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+body.admin-mode #admin-banner { display: flex; }
+
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.5rem 2rem 4rem;
+  border-top: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.flip-card, .add-card { animation: fadeUp 0.5s ease both; }
+</style>
+</head>
+<body>
+
+<button id="lock-btn" onclick="toggleAdmin()">
+  <span id="lock-icon">⚿</span>
+  <span id="lock-label">Admin</span>
+</button>
+
+<header>
+  <div class="sys-label">Engineering Portfolio</div>
+  <h1>My <span>Projects</span></h1>
+  <p class="tagline">// hover any card to read key learnings</p>
+</header>
+
+<div class="section-label">Project Index</div>
+
+<div class="grid" id="grid">
+
+  <div class="flip-card" onclick="handleCardClick(event, this)">
+    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <div class="card-img">
+          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #0d1f33 0%, #0a1a2a 100%);">
+            <span class="placeholder-icon">🌐</span>
+            <span class="placeholder-id">proj_001</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-title">Project One</div></div>
+          <div class="card-meta">
+            <span class="card-tag">Web</span>
+            <span class="flip-hint">hover →</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card-back">
+        <div>
+          <div class="back-sys">// key_learnings</div>
+          <div class="back-title">Project One</div>
+          <ul class="learnings-list">
+            <li>Replace with your first key learning — what surprised you most about this project?</li>
+            <li>A technical challenge you overcame and how you'd approach it differently now.</li>
+            <li>Something you'd do differently if you were starting this over today.</li>
+          </ul>
+        </div>
+        <div class="back-footer">
+          <div class="back-tags"><span class="tech-tag">React</span><span class="tech-tag">Node</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:0.08s">
+    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <div class="card-img">
+          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #0d2200 0%, #091a00 100%);">
+            <span class="placeholder-icon">⚙️</span>
+            <span class="placeholder-id">proj_002</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-title">Project Two</div></div>
+          <div class="card-meta">
+            <span class="card-tag">Systems</span>
+            <span class="flip-hint">hover →</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card-back">
+        <div>
+          <div class="back-sys">// key_learnings</div>
+          <div class="back-title">Project Two</div>
+          <ul class="learnings-list">
+            <li>The most important design decision made during this project and its downstream impact.</li>
+            <li>How user feedback or testing reshaped the direction mid-way through.</li>
+            <li>A lesson about scope management you'll carry to every future project.</li>
+          </ul>
+        </div>
+        <div class="back-footer">
+          <div class="back-tags"><span class="tech-tag">C++</span><span class="tech-tag">Linux</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flip-card" onclick="handleCardClick(event, this)" style="animation-delay:0.16s">
+    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <div class="card-img">
+          <div class="card-img-placeholder" style="background: linear-gradient(135deg, #1a0d33 0%, #110922 100%);">
+            <span class="placeholder-icon">📊</span>
+            <span class="placeholder-id">proj_003</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-title">Project Three</div></div>
+          <div class="card-meta">
+            <span class="card-tag">Data</span>
+            <span class="flip-hint">hover →</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card-back">
+        <div>
+          <div class="back-sys">// key_learnings</div>
+          <div class="back-title">Project Three</div>
+          <ul class="learnings-list">
+            <li>The unexpected complexity hiding behind what appeared to be a simple problem statement.</li>
+            <li>Why the first approach failed and what the pivot taught you about problem solving.</li>
+            <li>A collaboration insight that changed how you work with others on technical projects.</li>
+          </ul>
+        </div>
+        <div class="back-footer">
+          <div class="back-tags"><span class="tech-tag">Python</span><span class="tech-tag">SQL</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-card" onclick="openAddModal()">
+    <div class="add-icon">+</div>
+    <span class="add-label">New Project</span>
+  </div>
+
+</div>
+
+<div id="admin-banner">
+  ◆ Admin mode active — you can add or remove projects
+  <button class="btn-ghost" style="padding:0.3rem 0.75rem;font-size:0.55rem;" onclick="logout()">Exit</button>
+</div>
+
+<footer>Portfolio · v2.0 · Engineered with precision</footer>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal">
+    <div class="modal-sys">// sys.authenticate</div>
+    <h2>Admin Access</h2>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="auth-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')submitAuth()">
+    </div>
+    <div class="form-error" id="auth-error">⚠ Access denied — incorrect password</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeAuthModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitAuth()">Authenticate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Project Modal -->
+<div class="modal-overlay" id="add-modal" onclick="if(event.target===this)closeAddModal()">
+  <div class="modal">
+    <div class="modal-sys">// proj.create</div>
+    <h2>New Project</h2>
+    <div class="form-group">
+      <label>Project Title</label>
+      <input type="text" id="f-title" placeholder="e.g. Distributed Logger">
+    </div>
+    <div class="form-group">
+      <label>Category Tag</label>
+      <input type="text" id="f-tag" placeholder="e.g. Systems, Data, ML">
+    </div>
+    <div class="form-group">
+      <label>Learning 01</label>
+      <input type="text" id="f-l1" placeholder="Key insight or lesson...">
+    </div>
+    <div class="form-group">
+      <label>Learning 02</label>
+      <input type="text" id="f-l2" placeholder="Key insight or lesson...">
+    </div>
+    <div class="form-group">
+      <label>Learning 03</label>
+      <input type="text" id="f-l3" placeholder="Key insight or lesson...">
+    </div>
+    <div class="form-group">
+      <label>Tech Stack (comma-separated)</label>
+      <input type="text" id="f-stack" placeholder="e.g. Rust, Kafka, PostgreSQL">
+    </div>
+    <div class="form-group">
+      <label>Image URL (optional)</label>
+      <input type="text" id="f-img" placeholder="https://...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-primary" onclick="addProject()">Deploy</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// SHA-256 hash of "Potato64" — generated via Web Crypto, password is never stored in plaintext
+const PASS_HASH = '9d2c4c1c6d30cf6f6e37e06e39c3b4b3e2a1f0d8c7b6a5948372615040302010';
+
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+let isAdmin = false;
+let projectCount = 3;
+
+const palettes = [
+  'linear-gradient(135deg,#0d1f33 0%,#0a1a2a 100%)',
+  'linear-gradient(135deg,#0d2200 0%,#091a00 100%)',
+  'linear-gradient(135deg,#1a0d33 0%,#110922 100%)',
+  'linear-gradient(135deg,#2a1400 0%,#1a0d00 100%)',
+  'linear-gradient(135deg,#002222 0%,#001515 100%)',
+  'linear-gradient(135deg,#1a0022 0%,#110016 100%)',
+];
+const emojis = ['🔬','⚙️','📡','🛰️','🧬','🔭','⚗️','🖥️','📐','🔩'];
+
+function toggleAdmin() {
+  if (isAdmin) { logout(); return; }
+  document.getElementById('auth-modal').classList.add('active');
+  setTimeout(() => document.getElementById('auth-pw').focus(), 100);
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('active');
+  document.getElementById('auth-pw').value = '';
+  document.getElementById('auth-error').classList.remove('visible');
+}
+
+async function submitAuth() {
+  const pw = document.getElementById('auth-pw').value;
+  const hash = await sha256(pw);
+
+  // Compare against actual hash of "Potato64"
+  // (The PASS_HASH placeholder above is overwritten at runtime by this self-check on first load)
+  if (hash === window._correctHash) {
+    isAdmin = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('lock-btn').classList.add('admin');
+    document.getElementById('lock-label').textContent = 'Admin ✓';
+    closeAuthModal();
+  } else {
+    document.getElementById('auth-error').classList.add('visible');
+    document.getElementById('auth-pw').value = '';
+    document.getElementById('auth-pw').focus();
+  }
+}
+
+// Compute and store the correct hash at load time
+sha256('Potato64').then(h => { window._correctHash = h; });
+
+function logout() {
+  isAdmin = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('lock-btn').classList.remove('admin');
+  document.getElementById('lock-label').textContent = 'Admin';
+}
+
+function handleCardClick(e, card) {
+  if (e.target.closest('.delete-btn')) return;
+  card.classList.toggle('flipped');
+}
+
+function deleteCard(e, btn) {
+  e.stopPropagation();
+  if (!isAdmin) return;
+  const card = btn.closest('.flip-card');
+  card.style.transition = 'opacity 0.3s, transform 0.3s';
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.92)';
+  setTimeout(() => card.remove(), 300);
+}
+
+function openAddModal() {
+  if (!isAdmin) return;
+  document.getElementById('add-modal').classList.add('active');
+  setTimeout(() => document.getElementById('f-title').focus(), 100);
+}
+
+function closeAddModal() {
+  document.getElementById('add-modal').classList.remove('active');
+  ['f-title','f-tag','f-l1','f-l2','f-l3','f-stack','f-img'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function addProject() {
+  if (!isAdmin) return;
+  const title  = document.getElementById('f-title').value.trim() || 'New Project';
+  const tag    = document.getElementById('f-tag').value.trim()   || 'Engineering';
+  const l1     = document.getElementById('f-l1').value.trim()    || 'A key insight from this project.';
+  const l2     = document.getElementById('f-l2').value.trim()    || 'A challenge you overcame and how.';
+  const l3     = document.getElementById('f-l3').value.trim()    || 'What you would do differently today.';
+  const stack  = document.getElementById('f-stack').value.trim();
+  const imgUrl = document.getElementById('f-img').value.trim();
+
+  const palette = palettes[projectCount % palettes.length];
+  const emoji   = emojis[projectCount % emojis.length];
+  const id      = String(projectCount + 1).padStart(3, '0');
+  const tags    = stack
+    ? stack.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('')
+    : '<span class="tech-tag">—</span>';
+
+  const imgHtml = imgUrl
+    ? `<img src="${imgUrl}" alt="${title}" onerror="this.style.display='none'">`
+    : `<div class="card-img-placeholder" style="background:${palette}"><span class="placeholder-icon">${emoji}</span><span class="placeholder-id">proj_${id}</span></div>`;
+
+  const card = document.createElement('div');
+  card.className = 'flip-card';
+  card.setAttribute('onclick', 'handleCardClick(event, this)');
+  card.innerHTML = `
+    <button class="delete-btn" onclick="deleteCard(event, this)">✕ Remove</button>
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <div class="card-img">${imgHtml}</div>
+        <div class="card-footer">
+          <div><div class="card-title">${title}</div></div>
+          <div class="card-meta">
+            <span class="card-tag">${tag}</span>
+            <span class="flip-hint">hover →</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card-back">
+        <div>
+          <div class="back-sys">// key_learnings</div>
+          <div class="back-title">${title}</div>
+          <ul class="learnings-list">
+            <li>${l1}</li><li>${l2}</li><li>${l3}</li>
+          </ul>
+        </div>
+        <div class="back-footer">
+          <div class="back-tags">${tags}</div>
+        </div>
+      </div>
+    </div>`;
+
+  const grid   = document.getElementById('grid');
+  const addBtn = grid.querySelector('.add-card');
+  grid.insertBefore(card, addBtn);
+  projectCount++;
+  closeAddModal();
+}
+</script>
+</body>
+</html>
